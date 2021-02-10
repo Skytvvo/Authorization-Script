@@ -14,7 +14,7 @@ document.getElementById('btn').addEventListener("click", ()=>{
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open("POST", url, false);
+    xhr.open("POST", url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(
         JSON.stringify({
@@ -22,25 +22,27 @@ document.getElementById('btn').addEventListener("click", ()=>{
         password
         })
     );
-    let receivedData = JSON.parse(xhr.response);
+    xhr.onload = ()=>{
+        let receivedData = JSON.parse(xhr.response);
 
-    if(receivedData.data.status === 'failed')
-    {
-        document.getElementById('password').after(crePassErMess());
-        document.getElementById('login').after(creLogErMess());
-        ErrorDetected.password = true;
-        ErrorDetected.login = true;
-    }
-    if(receivedData.data.status === 'wrongPassword')
-    {
-        document.getElementById('password').after(crePassErMess());
-        ErrorDetected.password = true;
+        if(receivedData.data.status === 'failed')
+        {
+            document.getElementById('password').after(crePassErMess());
+            document.getElementById('login').after(creLogErMess());
+            ErrorDetected.password = true;
+            ErrorDetected.login = true;
+        }
+        if(receivedData.data.status === 'wrongPassword')
+        {
+            document.getElementById('password').after(crePassErMess());
+            ErrorDetected.password = true;
 
 
-    }
-    if(receivedData.data.status === 'success')
-    {
-        document.getElementById('btn').after(creSuccessMess());
+        }
+        if(receivedData.data.status === 'success')
+        {
+            document.getElementById('btn').after(creSuccessMess());
+        }
     }
 })
 
